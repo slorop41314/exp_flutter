@@ -4,6 +4,7 @@ import 'package:new_flutter_bloc/features/presentation/screens/auth/register_ide
 import 'package:new_flutter_bloc/features/presentation/screens/camera/whatsapp_camera.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/main/bottom_tab.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/main/home_screen.dart';
+import 'package:new_flutter_bloc/features/presentation/screens/main/pick_location.dart';
 import 'package:new_flutter_bloc/features/presentation/widgets/list_feature_tile.dart';
 
 class ExampleList extends StatelessWidget {
@@ -54,6 +55,14 @@ class ExampleList extends StatelessWidget {
                   Navigator.of(context).push(
                     MaterialPageRoute(
                         builder: (context) => WhatsappCameraScreen()),
+                  );
+                },
+              ),
+              ListFeatureTile(
+                label: "Maps pick location",
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => PickLocation()),
                   );
                 },
               ),
