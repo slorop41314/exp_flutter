@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/auth/login_screen.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/auth/register_identity.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/camera/whatsapp_camera.dart';
+import 'package:new_flutter_bloc/features/presentation/screens/main/bottom_tab.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/main/home_screen.dart';
 import 'package:new_flutter_bloc/features/presentation/widgets/list_feature_tile.dart';
 
@@ -27,6 +28,14 @@ class ExampleList extends StatelessWidget {
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => LoginScreen()),
+                  );
+                },
+              ),
+              ListFeatureTile(
+                label: "Bottom tab",
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => BottomTab()),
                   );
                 },
               ),
