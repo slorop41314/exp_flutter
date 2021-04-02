@@ -32,7 +32,7 @@ class ExampleList extends StatelessWidget {
                 },
               ),
               ListFeatureTile(
-                label: "Bottom tab",
+                label: "Bottom tab/ Explore UI",
                 onTap: () {
                   Navigator.of(context).push(
                     MaterialPageRoute(builder: (context) => BottomTab()),

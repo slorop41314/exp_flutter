@@ -23,10 +23,11 @@ class _BottomTabState extends State<BottomTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('BottomNavigationBar Sample'),
+      body: SafeArea(
+        child: _widgetOptions.elementAt(
+          _selectedIndex,
+        ),
       ),
-      body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -39,7 +40,7 @@ class _BottomTabState extends State<BottomTab> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.amber[800],
+        selectedItemColor: Colors.lightBlue,
         onTap: _onItemTapped,
       ),
     );

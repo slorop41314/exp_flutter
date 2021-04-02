@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:new_flutter_bloc/features/domain/repositories/games_repository.dart';
 import 'package:new_flutter_bloc/features/presentation/bloc/all_games/all_games_bloc.dart';
+import 'package:new_flutter_bloc/features/presentation/screens/main/bottom_tab.dart';
 import 'package:new_flutter_bloc/features/presentation/screens/main/list.dart';
 import './injection_container.dart' as di;
 

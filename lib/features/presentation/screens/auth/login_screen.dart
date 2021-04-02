@@ -51,6 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text("Biometric Login"),
+      ),
       body: SafeArea(
         child: Column(
           children: [
