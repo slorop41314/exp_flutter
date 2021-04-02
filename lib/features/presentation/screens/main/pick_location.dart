@@ -11,6 +11,7 @@ class PickLocation extends StatefulWidget {
 }
 
 class _PickLocationState extends State<PickLocation> {
+  Timer? _debounce;
   double _zoomValue = 15;
   Completer<GoogleMapController> _controller = Completer();
 
@@ -88,6 +89,8 @@ class _PickLocationState extends State<PickLocation> {
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
+  void _getLocationName() {}
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -109,6 +112,14 @@ class _PickLocationState extends State<PickLocation> {
                 if (!_controller.isCompleted) {
                   _controller.complete(controller);
                 }
+              },
+              myLocationButtonEnabled: true,
+              onCameraMove: (position) {
+                if (_debounce?.isActive ?? false) _debounce?.cancel();
+                _debounce = Timer(const Duration(milliseconds: 300), () {
+                  // Get location function here
+                  print("CAMERA MOVE $position}");
+                });
               },
             ),
           ),
