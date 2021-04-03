@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -14,6 +15,8 @@ class _PickLocationState extends State<PickLocation> {
   Timer? _debounce;
   double _zoomValue = 15;
   Completer<GoogleMapController> _controller = Completer();
+
+  String locationName = "";
 
   final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -35,6 +38,7 @@ class _PickLocationState extends State<PickLocation> {
 
   void _getCurrentPosition() async {
     final res = await this._determinePosition();
+    _getLocationName(res.latitude, res.longitude);
     _goToLocation(
       CameraPosition(
         target: LatLng(res.latitude, res.longitude),
@@ -89,38 +93,67 @@ class _PickLocationState extends State<PickLocation> {
     controller.animateCamera(CameraUpdate.newCameraPosition(newPosition));
   }
 
-  void _getLocationName() {}
+  void _getLocationName(double lat, double long) async {
+    final List<Placemark> response = await placemarkFromCoordinates(lat, long);
+    setState(() {
+      locationName = response[0].name!;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: AppBar(
         title: Text("Pick Location"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text(
+              "Done",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Text("Current location"),
+            child: Text("Current location : $locationName"),
           ),
           Expanded(
-            child: GoogleMap(
-              mapType: MapType.terrain,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                if (!_controller.isCompleted) {
-                  _controller.complete(controller);
-                }
-              },
-              myLocationButtonEnabled: true,
-              onCameraMove: (position) {
-                if (_debounce?.isActive ?? false) _debounce?.cancel();
-                _debounce = Timer(const Duration(milliseconds: 300), () {
-                  // Get location function here
-                  print("CAMERA MOVE $position}");
-                });
-              },
+            child: Stack(
+              children: [
+                GoogleMap(
+                  mapType: MapType.terrain,
+                  initialCameraPosition: _kGooglePlex,
+                  onMapCreated: (GoogleMapController controller) {
+                    if (!_controller.isCompleted) {
+                      _controller.complete(controller);
+                    }
+                  },
+                  myLocationButtonEnabled: true,
+                  onCameraMove: (position) {
+                    if (_debounce?.isActive ?? false) _debounce?.cancel();
+                    _debounce = Timer(const Duration(milliseconds: 300), () {
+                      _getLocationName(
+                        position.target.latitude,
+                        position.target.longitude,
+                      );
+                    });
+                  },
+                ),
+                Center(
+                  child: Icon(
+                    Icons.pin_drop,
+                    color: Colors.lightBlue,
+                    size: 50,
+                  ),
+                )
+              ],
             ),
           ),
         ],
