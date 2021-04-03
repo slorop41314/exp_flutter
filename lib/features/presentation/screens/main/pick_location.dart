@@ -17,6 +17,7 @@ class _PickLocationState extends State<PickLocation> {
   Completer<GoogleMapController> _controller = Completer();
 
   String locationName = "";
+  bool isGetLocationLoading = false;
 
   final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -94,9 +95,17 @@ class _PickLocationState extends State<PickLocation> {
   }
 
   void _getLocationName(double lat, double long) async {
-    final List<Placemark> response = await placemarkFromCoordinates(lat, long);
     setState(() {
-      locationName = response[0].name!;
+      isGetLocationLoading = true;
+    });
+    final List<Placemark> response = await placemarkFromCoordinates(lat, long);
+    if (response[0].name != null) {
+      setState(() {
+        locationName = response[0].name!;
+      });
+    }
+    setState(() {
+      isGetLocationLoading = false;
     });
   }
 
@@ -105,25 +114,10 @@ class _PickLocationState extends State<PickLocation> {
     return new Scaffold(
       appBar: AppBar(
         title: Text("Pick Location"),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              "Done",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Text("Current location : $locationName"),
-          ),
           Expanded(
             child: Stack(
               children: [
@@ -155,6 +149,46 @@ class _PickLocationState extends State<PickLocation> {
                 )
               ],
             ),
+          ),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(12),
+                topRight: Radius.circular(12),
+              ),
+            ),
+            padding: const EdgeInsets.all(12.0),
+            child: isGetLocationLoading
+                ? SizedBox(
+                    height: 80,
+                    child: Center(
+                      child: SizedBox(
+                        height: 40,
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Selected location :"),
+                      Text(
+                        "$locationName",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton.icon(
+                          onPressed: () {},
+                          icon: Icon(Icons.done),
+                          label: Text("PROCEED"),
+                        ),
+                      )
+                    ],
+                  ),
           ),
         ],
       ),
